@@ -1,9 +1,7 @@
-from functions.get_file_content import get_file_content
+from functions.write_file import write_file
 print('Test Case 1:')
-print(get_file_content("calculator", "main.py"))
+print(write_file("calculator", "lorem.txt", "wait, this isn't lorem ipsum"))
 print('Test Case 2:')
-print(get_file_content("calculator", "pkg/calculator.py"))
+print(write_file("calculator", "pkg/morelorem.txt", "lorem ipsum dolor sit amet"))
 print('Test Case 3:')
-print(get_file_content("calculator", "/bin/cat")) #(this should return an error string)
-print('Test Case 4:')
-print(get_file_content("calculator", "pkg/does_not_exist.py")) #(this should return an error string)
+print(write_file("calculator", "/tmp/temp.txt", "this should not be allowed"))
