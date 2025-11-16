@@ -1,5 +1,4 @@
 import os
-from config import *
 def write_file(working_directory, file_path, content):
     work_abs = os.path.abspath(working_directory)
     abs_path = os.path.abspath(os.path.join(working_directory, file_path))
