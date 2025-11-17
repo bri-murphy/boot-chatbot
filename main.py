@@ -4,7 +4,8 @@ from google import genai
 from google.genai import types
 from dotenv import load_dotenv
 from config import *
-
+from functions.get_files_info import schema_get_files_info
+from call_function import available_functions
 
 def main():
     load_dotenv()
@@ -32,22 +33,26 @@ def main():
     messages = [
         types.Content(role="user", parts=[types.Part(text=user_prompt)]),
     ]
+    
 
     generate_content(client, messages, verbose)
 
-
 def generate_content(client, messages, verbose):
     response = client.models.generate_content(
-    model= MODEL_NAME,
-    contents=messages,
-    config=types.GenerateContentConfig(system_instruction=SYSTEM_PROMPT),
-)
+        model=MODEL_NAME,
+        contents=messages,
+        config=types.GenerateContentConfig(
+            tools=[available_functions], system_instruction=SYSTEM_PROMPT
+        ),
+    )
     if verbose:
         print("Prompt tokens:", response.usage_metadata.prompt_token_count)
         print("Response tokens:", response.usage_metadata.candidates_token_count)
-    print("Response:")
-    print(response.text)
 
+    if not response.function_calls:
+        return response.text
 
+    for function_call_part in response.function_calls:
+        print(f"Calling function: {function_call_part.name}({function_call_part.args})")
 if __name__ == "__main__":
     main()
